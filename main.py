@@ -4,7 +4,7 @@ Building a fake data api to test frontend table technologies
 import os
 import json
 import pprint
-os.environ.setdefault("FRONTENDS", "http://localhost:5173")
+os.environ.setdefault("FRONTENDS", "http://localhost:5173,http://localhost:3000")
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dtos import ProductInDto, ProductOutDataDto, TableOutDto, TableFilterDto, ProductFilter, ProductPatchDto
