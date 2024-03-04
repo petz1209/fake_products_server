@@ -48,5 +48,28 @@ def write_big_data(data):
         f.write(json.dumps(data))
 
 
+def create_categories_json():
+    data = get_original_data()
+    _id = 0
+    existing = set()
+    categories = []
+    for x in data:
+
+        if x["category"] not in existing:
+            _id += 1
+            categories.append({"id": _id, "name": x["category"]})
+            existing.add(x["category"])
+        else:
+            continue
+    with open("fake_categories.json", "w") as f:
+        f.write(json.dumps(categories))
+
+
+
+
+
+
+
 if __name__ == '__main__':
-    main()
+    # main()
+    create_categories_json()

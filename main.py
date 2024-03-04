@@ -4,8 +4,12 @@ Building a fake data api to test frontend table technologies
 import os
 import json
 import pprint
+
+import fastapi
+
 os.environ.setdefault("FRONTENDS", "http://localhost:5173,http://localhost:3000")
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from dtos import ProductInDto, ProductOutDataDto, TableOutDto, TableFilterDto, ProductFilter, ProductPatchDto
 from models import ProductModel, RatingModel, PaginationIfoModel, ProductInModel, FilterModel, FilterItemModel,\
@@ -41,6 +45,9 @@ class Mapper:
 # initialize database as list of dict
 with open("data/big_data_products.json", "r") as f:
     database = json.loads(f.read())
+
+with open("data/fake_categories.json", "r") as f:
+    category_table = json.loads(f.read())
 
 
 app = FastAPI()
@@ -125,6 +132,17 @@ def patch_product(product_id: int, body: ProductPatchDto) -> ProductOutDataDto:
     if body.price is not None:
         record["price"] = body.price
     return Mapper.model_to_dto(record)
+
+
+@app.get("/categories")
+def get_categories(search: str = None):
+    if search is not None:
+        return JSONResponse(status_code=200, content=[x for x in category_table if search.lower() in x["name"].lower()])
+    return JSONResponse(status_code=200, content=category_table)
+
+
+
+
 
 
 
