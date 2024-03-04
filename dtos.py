@@ -27,6 +27,7 @@ class ProductInDto(BaseModel):
 class ProductPatchDto(BaseModel):
     title: str | None = None
     price: float | None = None
+    category: str | None = None
 
 
 class TableOutDto(BaseModel):
@@ -39,7 +40,6 @@ class TableFilterDto(BaseModel):
     pageSize: int = 10
     sorting: list[SortItemModel]
     filters: list[FilterItemModel]
-
 
 
 class ProductFilter(BaseModel):

@@ -63,6 +63,13 @@ app.add_middleware(
 )
 
 
+
+def filter_by_id(item, _id):
+    if item["id"] == _id:
+        return True
+    return False
+
+
 @app.get("/products")
 def get_products(offset: int = None, limit: int = None,
                  title: str = None, price: float = None, description: str = None, category: str = None,
@@ -131,6 +138,9 @@ def patch_product(product_id: int, body: ProductPatchDto) -> ProductOutDataDto:
         record["title"] = body.title
     if body.price is not None:
         record["price"] = body.price
+
+    if body.category is not None:
+        record["category"] = body.category
     return Mapper.model_to_dto(record)
 
 
@@ -141,6 +151,27 @@ def get_categories(search: str = None):
     return JSONResponse(status_code=200, content=category_table)
 
 
+@app.get("/categories/{category_id}")
+def get_category_by_id(category_id: int):
+
+    item = None
+    for x in category_table:
+        if x["id"] == category_id:
+            item = x
+            break
+
+    return JSONResponse(status_code=200, content=item)
+
+
+@app.get("/categories/by_name/{category_name}")
+def get_category_by_name(category_name: str):
+    item = None
+    for x in category_table:
+        if x["name"] == category_name:
+            item = x
+            break
+
+    return JSONResponse(status_code=200, content=item)
 
 
 
