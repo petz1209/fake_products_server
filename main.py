@@ -105,12 +105,9 @@ def get_products(offset: int = None, limit: int = None,
 
 @app.get("/products/{product_id}")
 def get_product_by_id(product_id: int) -> ProductOutDataDto:
-    result = None
-    for item in database:
-        print(item)
-        if item["id"] == product_id:
-            result = item
-            break
+
+    # we suggest that our database is ordered. therefor we can pick the item by its list space
+    result = database[product_id - 1]
     print(f"result: {result}")
     if result:
         return Mapper.model_to_dto(result)
@@ -174,105 +171,3 @@ def get_category_by_name(category_name: str):
     return JSONResponse(status_code=200, content=item)
 
 
-
-
-
-
-
-#
-# @app.post("/pagination")
-# def get_products_pagination(body: TableFilterDto
-#                  ) -> TableOutDto:
-#
-#     pprint.pprint(body)
-#     with open("data/fake_products.json", "r") as f:
-#         data = json.loads(f.read())
-#         # return JSONResponse(status_code=200, content={"data": data})
-#
-#     fm = body
-#
-#     offset = fm.page * fm.pageSize
-#
-#
-#     # filter_model = ProductFilter(title=title, price=price, description=description, category=category,
-#     #                              rating=rating, rating_count=rating_count, offset=offset, limit=limit)
-#     # with open("data/fake_products.json", "r") as f:
-#     #     data = json.loads(f.read())
-#     #
-#     if isinstance(fm.filters, list) and len(fm.filters) > 0:
-#         for f in fm.filters:
-#             data = do_filering(f.operator, f.value, f.field, data)
-#
-#     if isinstance(fm.sorting, list) and len(fm.sorting) > 0:
-#         for f in fm.sorting:
-#             if f.sort == "asc":
-#                 data = sorted(data, key=lambda d: d[f.field], reverse=False)
-#             else:
-#                 data = sorted(data, key=lambda d: d[f.field], reverse=True)
-#
-#     if offset + fm.pageSize > len(data):
-#         result = data[offset:]
-#     else:
-#         result = data[offset: offset + fm.pageSize]
-#
-#     dto_data = [Mapper.model_to_dto(item) for item in result]
-#
-#     pagination_info = None
-#     # if offset == 0:
-#     #     total_pages = int(len(data) / fm.pageSize)
-#     #     total_pages = total_pages if total_pages > 0 else 1
-#     #
-#
-#     print(dto_data)
-#     pagination_info = PaginationIfoModel(page=fm.page,
-#                                          pageSize=fm.pageSize
-#                                          )
-#     return TableOutDto(pagination_info=pagination_info, data=dto_data)
-#
-#
-# def do_filering(operator, value, field, obj) -> list[dict]:
-#     if operator == "contains":
-#         return contains(value, field, obj)
-#     if operator == "equals":
-#         return equals(value, field, obj)
-#     if operator == "starts with":
-#         return starts_with(value, field, obj)
-#     if operator == "ends with":
-#         return ends_with(value, field, obj)
-#     if operator == "is empty":
-#         return is_empty(value, field, obj)
-#     if operator == "is not empty":
-#         return is_not_empty(value, field, obj)
-#     if operator == "is any of":
-#         return is_any_of(value, field, obj)
-#     return obj
-#
-#
-# def contains(value, search_key, obj: list[dict]):
-#     return [x for x in obj if value.lower() in x[search_key].lower()]
-#
-#
-# def equals(value, search_key, obj: list[dict]):
-#     return [x for x in obj if value.lower() == x[search_key].lower()]
-#
-#
-# def starts_with(value, search_key, obj: list[dict]):
-#     return [x for x in obj if x[search_key].lower().startswith(value.lower())]
-#
-#
-# def ends_with(value, search_key, obj: list[dict]):
-#     return [x for x in obj if x[search_key].lower().endsswith(value.lower())]
-#
-#
-# def is_empty(value, search_key, obj: list[dict]):
-#     return obj
-#
-#
-# def is_not_empty(value, search_key, obj: list[dict]):
-#     return obj
-#
-#
-# def is_any_of(value, search_key, obj: list[dict]):
-#     return obj
-#
-#
